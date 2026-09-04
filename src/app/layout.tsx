@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cairo, Reem_Kufi } from "next/font/google";
 import { STORE } from "@/lib/store-config";
+import { getStoreBranding } from "@/lib/store-branding";
 import "./globals.css";
 
 const cairo = Cairo({
@@ -14,30 +15,33 @@ const reemKufi = Reem_Kufi({
   subsets: ["arabic", "latin"],
 });
 
-const title = "AYOUNA | متجر الملابس والمنتجات النسائية في العيون";
-const description = `AYOUNA — ${STORE.slogan}. متجر إلكتروني للملابس والمنتجات النسائية في العيون، المغرب.`;
+export async function generateMetadata(): Promise<Metadata> {
+  const branding = await getStoreBranding();
+  const title = `${branding.name} | متجر الملابس والمنتجات النسائية في العيون`;
+  const description = `${branding.name} — ${STORE.slogan}. متجر إلكتروني للملابس والمنتجات النسائية في العيون، المغرب.`;
 
-export const metadata: Metadata = {
-  metadataBase: new URL(STORE.siteUrl),
-  title: { default: title, template: `%s | ${STORE.name}` },
-  description,
-  openGraph: {
-    title,
+  return {
+    metadataBase: new URL(STORE.siteUrl),
+    title: { default: title, template: `%s | ${branding.name}` },
     description,
-    url: STORE.siteUrl,
-    siteName: STORE.name,
-    locale: "ar_MA",
-    type: "website",
-    images: ["/logo.png"],
-  },
-  twitter: {
-    card: "summary",
-    title,
-    description,
-    images: ["/logo.png"],
-  },
-  alternates: { canonical: STORE.siteUrl },
-};
+    openGraph: {
+      title,
+      description,
+      url: STORE.siteUrl,
+      siteName: branding.name,
+      locale: "ar_MA",
+      type: "website",
+      images: [branding.logoUrl],
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+      images: [branding.logoUrl],
+    },
+    alternates: { canonical: STORE.siteUrl },
+  };
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/supabase/require-admin";
 import { SignOutButton } from "@/components/SignOutButton";
 import { Logo } from "@/components/Logo";
+import { getStoreBranding } from "@/lib/store-branding";
 
 const NAV = [
   { href: "/admin", label: "نظرة عامة" },
@@ -14,7 +15,7 @@ const NAV = [
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { profile } = await requireAdmin();
+  const [{ profile }, branding] = await Promise.all([requireAdmin(), getStoreBranding()]);
 
   return (
     <div className="relative min-h-screen">
@@ -30,9 +31,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10 md:flex-row">
         <aside className="flex shrink-0 flex-col gap-3 rounded-2xl bg-cream/90 p-4 shadow-sm backdrop-blur-sm md:w-56">
           <div className="mb-2 flex items-center gap-3">
-            <Logo className="h-10 w-10" />
+            <Logo className="h-10 w-10" src={branding.logoUrl} />
             <div>
-              <p className="font-display text-lg text-brown-900">لوحة تحكم أيونا</p>
+              <p className="font-display text-lg text-brown-900">لوحة تحكم {branding.name}</p>
               <p className="text-sm text-brown-800">{profile?.full_name || "المدير"}</p>
             </div>
           </div>

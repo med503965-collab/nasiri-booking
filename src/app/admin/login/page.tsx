@@ -1,111 +1,13 @@
-"use client";
+import { Suspense } from "react";
+import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
+import { getStoreBranding } from "@/lib/store-branding";
 
-import { useState, type FormEvent, Suspense } from "react";
-import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { Logo } from "@/components/Logo";
-import { PasswordInput } from "@/components/PasswordInput";
+export default async function AdminLoginPage() {
+  const branding = await getStoreBranding();
 
-function AdminLoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const denied = searchParams.get("denied") === "1";
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") ?? "");
-    const password = String(formData.get("password") ?? "");
-
-    const supabase = createClient();
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (signInError || !data.user) {
-      setLoading(false);
-      setError("البريد الإلكتروني أو كلمة السر غير صحيحة");
-      return;
-    }
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", data.user.id)
-      .maybeSingle();
-
-    if (profile?.role !== "admin") {
-      await supabase.auth.signOut();
-      setLoading(false);
-      setError("هذا الحساب لا يملك صلاحية الدخول للوحة التحكم");
-      return;
-    }
-
-    router.push("/admin");
-    router.refresh();
-  };
-
-  return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-20">
-      <Image
-        src="https://cdn.gamma.app/b4pbxp460s5bj4y/design-anything/RLHqMpOze72e5ZKXb6c5w/_8vCLezzeZXXKFbpPGx9B.jpg"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="-z-10 object-cover"
-      />
-      <div className="absolute inset-0 -z-10 bg-sand-50/80" />
-
-      <div className="w-full max-w-md">
-        <div className="mb-8 flex flex-col items-center gap-2">
-          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-cream shadow-lg">
-            <Logo className="h-16 w-16" />
-          </div>
-          <h1 className="font-display text-2xl text-brown-900">دخول لوحة تحكم أيونا</h1>
-        </div>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-4 rounded-2xl border border-sand-200 bg-cream p-6 shadow-lg"
-        >
-          <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
-            البريد الإلكتروني
-            <input
-              required
-              name="email"
-              type="email"
-              className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
-            كلمة السر
-            <PasswordInput name="password" required autoComplete="current-password" />
-          </label>
-          {denied && !error && (
-            <p className="text-sm text-maroon-700">هذا الحساب لا يملك صلاحية الدخول للوحة التحكم</p>
-          )}
-          {error && <p className="text-sm text-maroon-700">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-2 rounded-full bg-brown-900 px-6 py-3 text-sm font-medium text-cream hover:bg-clay-600 disabled:opacity-50"
-          >
-            {loading ? "جارٍ الدخول..." : "دخول"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-export default function AdminLoginPage() {
   return (
     <Suspense>
-      <AdminLoginForm />
+      <AdminLoginForm storeName={branding.name} logoUrl={branding.logoUrl} />
     </Suspense>
   );
 }

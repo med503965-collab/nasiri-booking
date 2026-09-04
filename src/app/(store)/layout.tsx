@@ -1,26 +1,21 @@
 import { CartProvider } from "@/components/CartProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { createClient } from "@/lib/supabase/server";
+import { getStoreBranding } from "@/lib/store-branding";
 
 export default async function StoreLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const { data: settings } = await supabase
-    .from("store_settings")
-    .select("banner_text")
-    .eq("id", true)
-    .maybeSingle();
+  const branding = await getStoreBranding();
 
   return (
     <CartProvider>
-      {settings?.banner_text && (
+      {branding.bannerText && (
         <div className="bg-brown-900 px-4 py-2 text-center text-xs text-cream sm:text-sm">
-          {settings.banner_text}
+          {branding.bannerText}
         </div>
       )}
-      <Header />
+      <Header storeName={branding.name} logoUrl={branding.logoUrl} />
       <div className="flex flex-1 flex-col">{children}</div>
-      <Footer />
+      <Footer storeName={branding.name} storeNameAr={branding.nameAr} logoUrl={branding.logoUrl} />
     </CartProvider>
   );
 }

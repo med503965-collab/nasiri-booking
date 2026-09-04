@@ -258,18 +258,27 @@ export type Database = {
           contact_phone: string | null;
           delivery_fee: number;
           id: boolean;
+          logo_url: string | null;
+          store_name: string;
+          store_name_ar: string;
         };
         Insert: {
           banner_text?: string | null;
           contact_phone?: string | null;
           delivery_fee?: number;
           id?: boolean;
+          logo_url?: string | null;
+          store_name?: string;
+          store_name_ar?: string;
         };
         Update: {
           banner_text?: string | null;
           contact_phone?: string | null;
           delivery_fee?: number;
           id?: boolean;
+          logo_url?: string | null;
+          store_name?: string;
+          store_name_ar?: string;
         };
         Relationships: [];
       };

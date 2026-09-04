@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { Logo } from "@/components/Logo";
-import { STORE } from "@/lib/store-config";
 
 const NAV_LINKS = [
   { href: "/", label: "الرئيسية" },
@@ -14,7 +13,7 @@ const NAV_LINKS = [
   { href: "/contact", label: "تواصل معنا" },
 ];
 
-export function Header() {
+export function Header({ storeName, logoUrl }: { storeName: string; logoUrl: string }) {
   const { totalCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -22,8 +21,8 @@ export function Header() {
     <header className="sticky top-0 z-20 border-b border-sand-200 bg-cream/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2 text-brown-900">
-          <Logo className="h-8 w-8" />
-          <span className="font-display text-2xl">{STORE.name}</span>
+          <Logo className="h-8 w-8" src={logoUrl} />
+          <span className="font-display text-2xl">{storeName}</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">

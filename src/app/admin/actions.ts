@@ -202,3 +202,23 @@ export async function updateStoreSettings(formData: FormData) {
   revalidatePath("/admin/settings");
   revalidatePath("/");
 }
+
+export async function updateStoreBranding(formData: FormData) {
+  const { supabase } = await requireAdmin();
+  const storeName = String(formData.get("store_name") ?? "").trim() || "AYOUNA";
+  const storeNameAr = String(formData.get("store_name_ar") ?? "").trim() || "أيونا";
+  const logoUrl = String(formData.get("logo_url") ?? "").trim() || "/logo.png";
+
+  const { error } = await supabase
+    .from("store_settings")
+    .update({
+      store_name: storeName,
+      store_name_ar: storeNameAr,
+      logo_url: logoUrl === "/logo.png" ? null : logoUrl,
+    })
+    .eq("id", true);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/settings");
+  revalidatePath("/", "layout");
+}

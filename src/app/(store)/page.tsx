@@ -4,11 +4,13 @@ import { ProductCard } from "@/components/ProductCard";
 import { Logo } from "@/components/Logo";
 import { getCategories, getProducts } from "@/lib/products";
 import { STORE } from "@/lib/store-config";
+import { getStoreBranding } from "@/lib/store-branding";
 
 export default async function Home() {
-  const [products, categories] = await Promise.all([
+  const [products, categories, branding] = await Promise.all([
     getProducts(),
     getCategories(),
+    getStoreBranding(),
   ]);
   const featuredProducts = products.slice(0, 6);
 
@@ -27,10 +29,10 @@ export default async function Home() {
 
         <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-5 px-6 py-16 text-center">
           <div className="flex h-32 w-32 items-center justify-center rounded-full bg-cream/90 shadow-xl backdrop-blur-sm sm:h-44 sm:w-44">
-            <Logo className="h-28 w-28 sm:h-40 sm:w-40" />
+            <Logo className="h-28 w-28 sm:h-40 sm:w-40" src={branding.logoUrl} />
           </div>
           <span className="text-sm font-medium tracking-[0.3em] text-brown-800 uppercase">
-            {STORE.name} — {STORE.nameAr}
+            {branding.name} — {branding.nameAr}
           </span>
           <h1 className="font-display max-w-2xl text-4xl leading-tight text-brown-900 sm:text-5xl">
             {STORE.slogan}
@@ -102,7 +104,7 @@ export default async function Home() {
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-6 text-center">
           <h2 className="font-display text-2xl">قصة أيونا</h2>
           <p className="max-w-2xl text-sand-100">
-            وُلدت {STORE.nameAr} من قلب {STORE.city}، حيث تلتقي رمال الصحراء
+            وُلدت {branding.nameAr} من قلب {STORE.city}، حيث تلتقي رمال الصحراء
             الذهبية بأمواج المحيط الأطلسي. نصمم قطعًا نسائية تعكس أناقة
             المرأة المغربية الأصيلة بلمسة عصرية فاخرة، لتحملي معكِ دفء
             الصحراء أينما ذهبتِ.

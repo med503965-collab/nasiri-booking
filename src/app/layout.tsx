@@ -32,11 +32,13 @@ export const metadata: Metadata = {
     siteName: STORE.name,
     locale: "ar_MA",
     type: "website",
+    images: ["/logo.png"],
   },
   twitter: {
     card: "summary",
     title,
     description,
+    images: ["/logo.png"],
   },
   alternates: { canonical: STORE.siteUrl },
 };

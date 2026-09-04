@@ -51,7 +51,7 @@ function AdminLoginForm() {
   return (
     <div className="mx-auto w-full max-w-md px-6 py-20">
       <div className="mb-8 flex flex-col items-center gap-2">
-        <Logo className="h-10 w-10 text-clay-600" />
+        <Logo className="h-10 w-10" />
         <h1 className="font-display text-2xl text-brown-900">دخول لوحة تحكم أيونا</h1>
       </div>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl border border-sand-200 bg-cream p-6">

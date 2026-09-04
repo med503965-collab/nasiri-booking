@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { Logo } from "@/components/Logo";
 import { STORE } from "@/lib/store-config";
-import { createClient } from "@/lib/supabase/client";
 
 const NAV_LINKS = [
   { href: "/", label: "الرئيسية" },
@@ -18,16 +17,6 @@ const NAV_LINKS = [
 export function Header() {
   const { totalCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setIsLoggedIn(!!data.user));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => setIsLoggedIn(!!session?.user));
-    return () => subscription.unsubscribe();
-  }, []);
 
   return (
     <header className="sticky top-0 z-20 border-b border-sand-200 bg-cream/95 backdrop-blur">
@@ -50,12 +39,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link
-            href={isLoggedIn ? "/account" : "/login"}
-            className="hidden text-sm font-medium text-brown-800 transition-colors hover:text-clay-600 sm:block"
-          >
-            {isLoggedIn ? "حسابي" : "دخول"}
-          </Link>
           <Link
             href="/cart"
             className="relative flex items-center gap-1 rounded-full border border-sand-200 px-4 py-2 text-sm font-medium text-brown-900 transition-colors hover:border-clay-400"
@@ -97,13 +80,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href={isLoggedIn ? "/account" : "/login"}
-            onClick={() => setMenuOpen(false)}
-            className="rounded-md px-2 py-2 text-sm font-medium text-brown-800 hover:bg-sand-100"
-          >
-            {isLoggedIn ? "حسابي" : "دخول"}
-          </Link>
         </nav>
       )}
     </header>

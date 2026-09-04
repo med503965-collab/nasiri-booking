@@ -12,23 +12,30 @@ export function AccountForm({ currentEmail }: { currentEmail: string }) {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
     setMessage(null);
 
     const formData = new FormData(event.currentTarget);
     const email = String(formData.get("email") ?? "").trim();
+    const emailConfirm = String(formData.get("email_confirm") ?? "").trim();
     const password = String(formData.get("password") ?? "");
 
+    const emailChanged = Boolean(email) && email !== currentEmail;
+
+    if (emailChanged && email !== emailConfirm) {
+      setMessage({ type: "error", text: "البريد الإلكتروني الجديد وتأكيده غير متطابقين" });
+      return;
+    }
+
     const updates: { email?: string; password?: string } = {};
-    if (email && email !== currentEmail) updates.email = email;
+    if (emailChanged) updates.email = email;
     if (password) updates.password = password;
 
     if (Object.keys(updates).length === 0) {
-      setLoading(false);
       setMessage({ type: "error", text: "لا يوجد تغيير لحفظه" });
       return;
     }
 
+    setLoading(true);
     const supabase = createClient();
     const { error } = await supabase.auth.updateUser(updates);
     setLoading(false);
@@ -58,6 +65,15 @@ export function AccountForm({ currentEmail }: { currentEmail: string }) {
           name="email"
           type="email"
           defaultValue={currentEmail}
+          className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
+        تأكيد البريد الإلكتروني الجديد (فقط إذا غيّرتِ البريد أعلاه)
+        <input
+          name="email_confirm"
+          type="email"
+          placeholder="أعيدي كتابة البريد الجديد للتأكيد"
           className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
         />
       </label>

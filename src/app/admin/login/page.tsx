@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, Suspense } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Logo } from "@/components/Logo";
@@ -49,37 +50,54 @@ function AdminLoginForm() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-md px-6 py-20">
-      <div className="mb-8 flex flex-col items-center gap-2">
-        <Logo className="h-10 w-10" />
-        <h1 className="font-display text-2xl text-brown-900">دخول لوحة تحكم أيونا</h1>
-      </div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl border border-sand-200 bg-cream p-6">
-        <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
-          البريد الإلكتروني
-          <input
-            required
-            name="email"
-            type="email"
-            className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
-          كلمة السر
-          <PasswordInput name="password" required autoComplete="current-password" />
-        </label>
-        {denied && !error && (
-          <p className="text-sm text-maroon-700">هذا الحساب لا يملك صلاحية الدخول للوحة التحكم</p>
-        )}
-        {error && <p className="text-sm text-maroon-700">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-2 rounded-full bg-brown-900 px-6 py-3 text-sm font-medium text-cream hover:bg-clay-600 disabled:opacity-50"
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-20">
+      <Image
+        src="https://cdn.gamma.app/b4pbxp460s5bj4y/design-anything/RLHqMpOze72e5ZKXb6c5w/_8vCLezzeZXXKFbpPGx9B.jpg"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="-z-10 object-cover"
+      />
+      <div className="absolute inset-0 -z-10 bg-sand-50/80" />
+
+      <div className="w-full max-w-md">
+        <div className="mb-8 flex flex-col items-center gap-2">
+          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-cream shadow-lg">
+            <Logo className="h-16 w-16" />
+          </div>
+          <h1 className="font-display text-2xl text-brown-900">دخول لوحة تحكم أيونا</h1>
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 rounded-2xl border border-sand-200 bg-cream p-6 shadow-lg"
         >
-          {loading ? "جارٍ الدخول..." : "دخول"}
-        </button>
-      </form>
+          <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
+            البريد الإلكتروني
+            <input
+              required
+              name="email"
+              type="email"
+              className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
+            كلمة السر
+            <PasswordInput name="password" required autoComplete="current-password" />
+          </label>
+          {denied && !error && (
+            <p className="text-sm text-maroon-700">هذا الحساب لا يملك صلاحية الدخول للوحة التحكم</p>
+          )}
+          {error && <p className="text-sm text-maroon-700">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-2 rounded-full bg-brown-900 px-6 py-3 text-sm font-medium text-cream hover:bg-clay-600 disabled:opacity-50"
+          >
+            {loading ? "جارٍ الدخول..." : "دخول"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

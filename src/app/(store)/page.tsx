@@ -14,7 +14,7 @@ export default async function Home() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden">
+      <section className="relative isolate flex min-h-[85vh] items-center overflow-hidden">
         <Image
           src="https://cdn.gamma.app/b4pbxp460s5bj4y/design-anything/RLHqMpOze72e5ZKXb6c5w/_8vCLezzeZXXKFbpPGx9B.jpg"
           alt=""
@@ -23,11 +23,11 @@ export default async function Home() {
           sizes="100vw"
           className="-z-10 object-cover"
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-cream via-cream/40 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-cream via-cream/30 to-transparent" />
 
-        <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-5 px-6 pt-16 pb-24 text-center">
-          <div className="flex h-28 w-28 items-center justify-center rounded-full bg-cream/85 shadow-lg backdrop-blur-sm sm:h-36 sm:w-36">
-            <Logo className="h-24 w-24 sm:h-32 sm:w-32" />
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-5 px-6 py-16 text-center">
+          <div className="flex h-32 w-32 items-center justify-center rounded-full bg-cream/90 shadow-xl backdrop-blur-sm sm:h-44 sm:w-44">
+            <Logo className="h-28 w-28 sm:h-40 sm:w-40" />
           </div>
           <span className="text-sm font-medium tracking-[0.3em] text-brown-800 uppercase">
             {STORE.name} — {STORE.nameAr}

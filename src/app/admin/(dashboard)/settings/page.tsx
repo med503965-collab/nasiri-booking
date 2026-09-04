@@ -1,7 +1,8 @@
 import { requireAdmin } from "@/lib/supabase/require-admin";
-import { updateStoreSettings, updateStoreBranding } from "@/app/admin/actions";
+import { updateStoreSettings, updateStoreBranding, updateStoreContact } from "@/app/admin/actions";
 import { AccountForm } from "@/components/admin/AccountForm";
 import { StoreLogoUploader } from "@/components/admin/StoreLogoUploader";
+import { STORE } from "@/lib/store-config";
 
 export default async function AdminSettingsPage() {
   const { supabase, user } = await requireAdmin();
@@ -47,6 +48,73 @@ export default async function AdminSettingsPage() {
           className="mt-2 w-fit rounded-full bg-brown-900 px-6 py-3 text-sm font-medium text-cream hover:bg-clay-600"
         >
           حفظ الاسم والشعار
+        </button>
+      </form>
+
+      <h2 className="font-display mt-10 mb-3 text-lg text-brown-900">
+        واتساب وروابط التواصل الاجتماعي
+      </h2>
+      <form
+        action={updateStoreContact}
+        className="flex flex-col gap-4 rounded-2xl border border-sand-200 bg-cream p-6"
+      >
+        <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
+          رقم واتساب المتجر
+          <input
+            name="whatsapp_number"
+            defaultValue={settings?.whatsapp_number || STORE.whatsappNumber}
+            placeholder="212600000000"
+            className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
+          />
+          <span className="text-xs text-brown-800/70">
+            بصيغة دولية بدون + أو مسافات، مثال: 212600000000
+          </span>
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
+          رابط انستقرام
+          <input
+            name="instagram_url"
+            type="url"
+            defaultValue={settings?.instagram_url ?? ""}
+            placeholder="https://instagram.com/ayouna"
+            className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
+          رابط فيسبوك
+          <input
+            name="facebook_url"
+            type="url"
+            defaultValue={settings?.facebook_url ?? ""}
+            placeholder="https://facebook.com/ayouna"
+            className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
+          رابط تيك توك
+          <input
+            name="tiktok_url"
+            type="url"
+            defaultValue={settings?.tiktok_url ?? ""}
+            placeholder="https://tiktok.com/@ayouna"
+            className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
+          رابط سناب شات
+          <input
+            name="snapchat_url"
+            type="url"
+            defaultValue={settings?.snapchat_url ?? ""}
+            placeholder="https://snapchat.com/add/ayouna"
+            className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
+          />
+        </label>
+        <button
+          type="submit"
+          className="mt-2 w-fit rounded-full bg-brown-900 px-6 py-3 text-sm font-medium text-cream hover:bg-clay-600"
+        >
+          حفظ واتساب والروابط
         </button>
       </form>
 

@@ -203,6 +203,30 @@ export async function updateStoreSettings(formData: FormData) {
   revalidatePath("/");
 }
 
+export async function updateStoreContact(formData: FormData) {
+  const { supabase } = await requireAdmin();
+  const whatsappNumber = String(formData.get("whatsapp_number") ?? "").trim() || null;
+  const instagramUrl = String(formData.get("instagram_url") ?? "").trim() || null;
+  const facebookUrl = String(formData.get("facebook_url") ?? "").trim() || null;
+  const tiktokUrl = String(formData.get("tiktok_url") ?? "").trim() || null;
+  const snapchatUrl = String(formData.get("snapchat_url") ?? "").trim() || null;
+
+  const { error } = await supabase
+    .from("store_settings")
+    .update({
+      whatsapp_number: whatsappNumber,
+      instagram_url: instagramUrl,
+      facebook_url: facebookUrl,
+      tiktok_url: tiktokUrl,
+      snapchat_url: snapchatUrl,
+    })
+    .eq("id", true);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/settings");
+  revalidatePath("/", "layout");
+}
+
 export async function updateStoreBranding(formData: FormData) {
   const { supabase } = await requireAdmin();
   const storeName = String(formData.get("store_name") ?? "").trim() || "AYOUNA";

@@ -3,9 +3,9 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
+import { useStoreSettings } from "@/components/StoreSettingsProvider";
 import { createClient } from "@/lib/supabase/client";
 import { formatPriceMAD } from "@/lib/types";
-import { STORE } from "@/lib/store-config";
 
 interface OrderResult {
   order_number: string;
@@ -16,6 +16,7 @@ interface OrderResult {
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
+  const { whatsappNumber } = useStoreSettings();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("العيون");
@@ -99,8 +100,8 @@ export default function CheckoutPage() {
       `\nالمجموع: ${formatPriceMAD(result.total)}` +
       (notes ? `\nملاحظات: ${notes}` : "");
 
-    const whatsappHref = STORE.whatsappNumber
-      ? `https://wa.me/${STORE.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
+    const whatsappHref = whatsappNumber
+      ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
       : null;
 
     return (

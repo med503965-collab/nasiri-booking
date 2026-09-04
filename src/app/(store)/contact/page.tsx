@@ -1,19 +1,18 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useStoreSettings } from "@/components/StoreSettingsProvider";
 import { STORE } from "@/lib/store-config";
 
 export default function ContactPage() {
+  const { name: storeName, nameAr: storeNameAr, whatsappNumber } = useStoreSettings();
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const text = `مرحبًا ${STORE.name}،\nالاسم: ${name}\nالرسالة: ${message}`;
-    window.open(
-      `https://wa.me/${STORE.whatsappNumber}?text=${encodeURIComponent(text)}`,
-      "_blank",
-    );
+    const text = `مرحبًا ${storeName}،\nالاسم: ${name}\nالرسالة: ${message}`;
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   return (
@@ -21,7 +20,7 @@ export default function ContactPage() {
       <h1 className="font-display mb-2 text-3xl text-brown-900">تواصلي معنا</h1>
       <p className="mb-8 text-brown-800">
         يسعدنا تواصلكِ معنا لأي استفسار حول المنتجات أو الطلبات. فريق{" "}
-        {STORE.nameAr} في {STORE.city} في خدمتكِ.
+        {storeNameAr} في {STORE.city} في خدمتكِ.
       </p>
 
       <form
@@ -53,12 +52,12 @@ export default function ContactPage() {
 
         <button
           type="submit"
-          disabled={!STORE.whatsappNumber}
+          disabled={!whatsappNumber}
           className="mt-2 rounded-full bg-brown-900 px-6 py-3 text-sm font-medium text-cream hover:bg-clay-600 disabled:opacity-50"
         >
           إرسال عبر واتساب
         </button>
-        {!STORE.whatsappNumber && (
+        {!whatsappNumber && (
           <p className="text-sm text-brown-800/70">
             سيتم تفعيل هذا الزر بعد إضافة رقم واتساب المتجر.
           </p>

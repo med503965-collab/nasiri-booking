@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/CartProvider";
+import { useStoreSettings } from "@/components/StoreSettingsProvider";
 import { Logo } from "@/components/Logo";
 
 const NAV_LINKS = [
@@ -13,8 +14,9 @@ const NAV_LINKS = [
   { href: "/contact", label: "تواصل معنا" },
 ];
 
-export function Header({ storeName, logoUrl }: { storeName: string; logoUrl: string }) {
+export function Header() {
   const { totalCount } = useCart();
+  const { name: storeName, logoUrl } = useStoreSettings();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (

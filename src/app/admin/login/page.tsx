@@ -4,13 +4,12 @@ import { useState, type FormEvent, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Logo } from "@/components/Logo";
+import { PasswordInput } from "@/components/PasswordInput";
 
 function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const denied = searchParams.get("denied") === "1";
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -18,6 +17,10 @@ function AdminLoginForm() {
     event.preventDefault();
     setLoading(true);
     setError(null);
+
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "");
+    const password = String(formData.get("password") ?? "");
 
     const supabase = createClient();
     const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
@@ -56,21 +59,14 @@ function AdminLoginForm() {
           البريد الإلكتروني
           <input
             required
+            name="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
           كلمة السر
-          <input
-            required
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
-          />
+          <PasswordInput name="password" required autoComplete="current-password" />
         </label>
         {denied && !error && (
           <p className="text-sm text-maroon-700">هذا الحساب لا يملك صلاحية الدخول للوحة التحكم</p>

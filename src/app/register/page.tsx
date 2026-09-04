@@ -4,13 +4,10 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -19,6 +16,13 @@ export default function RegisterPage() {
     event.preventDefault();
     setLoading(true);
     setError(null);
+
+    const formData = new FormData(event.currentTarget);
+    const fullName = String(formData.get("full_name") ?? "");
+    const phone = String(formData.get("phone") ?? "");
+    const email = String(formData.get("email") ?? "");
+    const password = String(formData.get("password") ?? "");
+
     const supabase = createClient();
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -70,8 +74,7 @@ export default function RegisterPage() {
           الاسم الكامل
           <input
             required
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            name="full_name"
             className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
           />
         </label>
@@ -79,9 +82,8 @@ export default function RegisterPage() {
           رقم الهاتف
           <input
             required
+            name="phone"
             type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
             className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
           />
         </label>
@@ -89,22 +91,14 @@ export default function RegisterPage() {
           البريد الإلكتروني
           <input
             required
+            name="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
           كلمة السر
-          <input
-            required
-            minLength={6}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
-          />
+          <PasswordInput name="password" required minLength={6} autoComplete="new-password" />
         </label>
         {error && <p className="text-sm text-maroon-700">{error}</p>}
         <button

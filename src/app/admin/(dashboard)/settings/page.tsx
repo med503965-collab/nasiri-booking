@@ -1,8 +1,9 @@
 import { requireAdmin } from "@/lib/supabase/require-admin";
 import { updateStoreSettings } from "@/app/admin/actions";
+import { AccountForm } from "@/components/admin/AccountForm";
 
 export default async function AdminSettingsPage() {
-  const { supabase } = await requireAdmin();
+  const { supabase, user } = await requireAdmin();
   const { data: settings } = await supabase
     .from("store_settings")
     .select("*")
@@ -13,6 +14,10 @@ export default async function AdminSettingsPage() {
     <div className="max-w-xl">
       <h1 className="font-display mb-6 text-2xl text-brown-900">إعدادات المتجر</h1>
 
+      <h2 className="font-display mb-3 text-lg text-brown-900">حسابي (البريد وكلمة السر)</h2>
+      <AccountForm currentEmail={user.email ?? ""} />
+
+      <h2 className="font-display mt-10 mb-3 text-lg text-brown-900">إعدادات المتجر العامة</h2>
       <form action={updateStoreSettings} className="flex flex-col gap-4 rounded-2xl border border-sand-200 bg-cream p-6">
         <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
           نص الإعلان العلوي

@@ -14,6 +14,8 @@ export function ProductForm({
 }) {
   return (
     <form action={action} className="flex flex-col gap-4 rounded-2xl border border-sand-200 bg-cream p-6">
+      <ImageUploader name="images" initialImages={product?.images ?? []} />
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm font-medium text-brown-900">
           اسم المنتج
@@ -140,8 +142,6 @@ export function ProductForm({
           className="resize-none rounded-lg border border-sand-200 bg-white px-4 py-2.5 outline-none focus:border-clay-400"
         />
       </label>
-
-      <ImageUploader name="images" initialImages={product?.images ?? []} />
 
       <button
         type="submit"

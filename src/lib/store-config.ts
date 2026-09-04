@@ -4,6 +4,6 @@ export const STORE = {
   slogan: "أناقتكِ من قلب العيون",
   city: "العيون، المغرب",
   currency: "MAD",
-  // رقم واتساب مؤقت — يرجى استبداله برقم المتجر الفعلي قبل النشر
-  whatsappNumber: "212600000000",
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 };

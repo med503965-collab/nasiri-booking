@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { ProductCard } from "@/components/ProductCard";
-import { CATEGORIES, PRODUCTS } from "@/lib/products";
+import { getCategories, getProducts } from "@/lib/products";
 import { STORE } from "@/lib/store-config";
 
-export default function Home() {
-  const featuredProducts = PRODUCTS.slice(0, 6);
+export default async function Home() {
+  const [products, categories] = await Promise.all([
+    getProducts(),
+    getCategories(),
+  ]);
+  const featuredProducts = products.slice(0, 6);
 
   return (
     <>
@@ -43,10 +47,10 @@ export default function Home() {
           تسوّقي حسب الفئة
         </h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <Link
               key={category.slug}
-              href={`/products?category=${category.slug}`}
+              href={`/products?category=${encodeURIComponent(category.slug)}`}
               className="flex flex-col items-center gap-3 rounded-2xl border border-sand-200 bg-cream px-4 py-8 text-center transition-shadow hover:shadow-md"
             >
               <span className="font-display text-lg text-brown-900">
@@ -69,11 +73,15 @@ export default function Home() {
             عرض الكل ←
           </Link>
         </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.slug} product={product} />
-          ))}
-        </div>
+        {featuredProducts.length === 0 ? (
+          <p className="text-brown-800">لا توجد منتجات متاحة حاليًا.</p>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="bg-brown-900 py-16 text-cream">

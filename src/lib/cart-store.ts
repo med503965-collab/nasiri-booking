@@ -1,14 +1,23 @@
-import type { Product } from "@/lib/products";
+import type { Product } from "@/lib/types";
 
 export interface CartItem {
+  key: string;
+  productId: string;
   slug: string;
   name: string;
   price: number;
+  image: string | null;
+  color: string | null;
+  size: string | null;
   quantity: number;
 }
 
 const STORAGE_KEY = "ayouna-cart";
 const listeners = new Set<() => void>();
+
+function itemKey(productId: string, color: string | null, size: string | null) {
+  return `${productId}::${color ?? ""}::${size ?? ""}`;
+}
 
 function loadFromStorage(): CartItem[] {
   if (typeof window === "undefined") return [];
@@ -46,34 +55,51 @@ export function getServerSnapshot(): CartItem[] {
   return [];
 }
 
-export function addItem(product: Product, quantity = 1) {
-  const existing = items.find((item) => item.slug === product.slug);
+export function addItem(
+  product: Product,
+  quantity = 1,
+  options?: { color?: string | null; size?: string | null },
+) {
+  const color = options?.color ?? null;
+  const size = options?.size ?? null;
+  const key = itemKey(product.id, color, size);
+  const existing = items.find((item) => item.key === key);
+
   if (existing) {
     setItems(
       items.map((item) =>
-        item.slug === product.slug
-          ? { ...item, quantity: item.quantity + quantity }
-          : item,
+        item.key === key ? { ...item, quantity: item.quantity + quantity } : item,
       ),
     );
     return;
   }
+
   setItems([
     ...items,
-    { slug: product.slug, name: product.name, price: product.price, quantity },
+    {
+      key,
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      price: product.price,
+      image: product.images[0] ?? null,
+      color,
+      size,
+      quantity,
+    },
   ]);
 }
 
-export function removeItem(slug: string) {
-  setItems(items.filter((item) => item.slug !== slug));
+export function removeItem(key: string) {
+  setItems(items.filter((item) => item.key !== key));
 }
 
-export function updateQuantity(slug: string, quantity: number) {
+export function updateQuantity(key: string, quantity: number) {
   if (quantity < 1) {
-    removeItem(slug);
+    removeItem(key);
     return;
   }
-  setItems(items.map((item) => (item.slug === slug ? { ...item, quantity } : item)));
+  setItems(items.map((item) => (item.key === key ? { ...item, quantity } : item)));
 }
 
 export function clearCart() {

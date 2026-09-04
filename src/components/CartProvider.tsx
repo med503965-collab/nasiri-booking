@@ -3,13 +3,17 @@
 import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
 import * as cartStore from "@/lib/cart-store";
 import type { CartItem } from "@/lib/cart-store";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/lib/types";
 
 interface CartContextValue {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number) => void;
-  removeItem: (slug: string) => void;
-  updateQuantity: (slug: string, quantity: number) => void;
+  addItem: (
+    product: Product,
+    quantity?: number,
+    options?: { color?: string | null; size?: string | null },
+  ) => void;
+  removeItem: (key: string) => void;
+  updateQuantity: (key: string, quantity: number) => void;
   clearCart: () => void;
   totalCount: number;
   totalPrice: number;

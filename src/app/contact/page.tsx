@@ -53,10 +53,16 @@ export default function ContactPage() {
 
         <button
           type="submit"
-          className="mt-2 rounded-full bg-brown-900 px-6 py-3 text-sm font-medium text-cream hover:bg-clay-600"
+          disabled={!STORE.whatsappNumber}
+          className="mt-2 rounded-full bg-brown-900 px-6 py-3 text-sm font-medium text-cream hover:bg-clay-600 disabled:opacity-50"
         >
           إرسال عبر واتساب
         </button>
+        {!STORE.whatsappNumber && (
+          <p className="text-sm text-brown-800/70">
+            سيتم تفعيل هذا الزر بعد إضافة رقم واتساب المتجر.
+          </p>
+        )}
       </form>
     </div>
   );

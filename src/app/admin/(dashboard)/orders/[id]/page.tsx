@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/supabase/require-admin";
-import { updateOrderStatus } from "@/app/admin/actions";
+import { updateOrderStatus, deleteOrderAndRedirect } from "@/app/admin/actions";
+import { ConfirmDeleteButton } from "@/components/admin/ConfirmDeleteButton";
 import { formatPriceMAD } from "@/lib/types";
 
 const STATUSES = ["جديد", "تم التأكيد", "قيد التجهيز", "خرج للتوصيل", "تم التسليم", "ملغى"];
@@ -23,7 +24,15 @@ export default async function AdminOrderDetailPage(props: PageProps<"/admin/orde
 
   return (
     <div className="max-w-2xl">
-      <h1 className="font-display mb-2 text-2xl text-brown-900">طلب {order.order_number}</h1>
+      <div className="mb-2 flex items-center justify-between">
+        <h1 className="font-display text-2xl text-brown-900">طلب {order.order_number}</h1>
+        <ConfirmDeleteButton
+          action={deleteOrderAndRedirect.bind(null, order.id)}
+          confirmMessage={`هل تريدين حذف الطلب ${order.order_number} نهائيًا؟ لا يمكن التراجع عن هذا الإجراء.`}
+          label="حذف الطلب"
+          className="rounded-full border border-maroon-700 px-4 py-1.5 text-sm font-medium text-maroon-700 hover:bg-maroon-700 hover:text-cream"
+        />
+      </div>
       <p className="mb-6 text-sm text-brown-800">
         {new Date(order.created_at).toLocaleString("ar-MA")}
       </p>

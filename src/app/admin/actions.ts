@@ -150,6 +150,19 @@ export async function updateOrderStatus(orderId: string, status: string) {
   revalidatePath(`/admin/orders/${orderId}`);
 }
 
+export async function deleteOrder(orderId: string) {
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.from("orders").delete().eq("id", orderId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/orders");
+  revalidatePath("/admin");
+}
+
+export async function deleteOrderAndRedirect(orderId: string) {
+  await deleteOrder(orderId);
+  redirect("/admin/orders");
+}
+
 export async function createCoupon(formData: FormData) {
   const { supabase } = await requireAdmin();
   const code = String(formData.get("code") ?? "").trim().toUpperCase();

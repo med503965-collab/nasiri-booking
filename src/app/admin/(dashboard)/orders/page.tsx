@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/supabase/require-admin";
+import { deleteOrder } from "@/app/admin/actions";
+import { ConfirmDeleteButton } from "@/components/admin/ConfirmDeleteButton";
 import { formatPriceMAD } from "@/lib/types";
 
 const STATUSES = ["جديد", "تم التأكيد", "قيد التجهيز", "خرج للتوصيل", "تم التسليم", "ملغى"];
@@ -55,10 +57,14 @@ export default async function AdminOrdersPage(props: PageProps<"/admin/orders">)
                 <td className="p-3 text-brown-800">{order.city}</td>
                 <td className="p-3 text-brown-800">{formatPriceMAD(order.total)}</td>
                 <td className="p-3 text-brown-800">{order.status}</td>
-                <td className="p-3">
+                <td className="flex gap-3 p-3">
                   <Link href={`/admin/orders/${order.id}`} className="text-clay-600 hover:text-clay-500">
                     التفاصيل
                   </Link>
+                  <ConfirmDeleteButton
+                    action={deleteOrder.bind(null, order.id)}
+                    confirmMessage={`هل تريدين حذف الطلب ${order.order_number} نهائيًا؟ لا يمكن التراجع عن هذا الإجراء.`}
+                  />
                 </td>
               </tr>
             ))}

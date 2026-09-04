@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Cairo, Reem_Kufi } from "next/font/google";
-import { CartProvider } from "@/components/CartProvider";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { STORE } from "@/lib/store-config";
-import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
 const cairo = Cairo({
@@ -43,14 +39,7 @@ export const metadata: Metadata = {
   alternates: { canonical: STORE.siteUrl },
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const supabase = await createClient();
-  const { data: settings } = await supabase
-    .from("store_settings")
-    .select("banner_text")
-    .eq("id", true)
-    .maybeSingle();
-
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ar"
@@ -58,16 +47,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${cairo.variable} ${reemKufi.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-sand-50 font-sans text-brown-900">
-        <CartProvider>
-          {settings?.banner_text && (
-            <div className="bg-brown-900 px-4 py-2 text-center text-xs text-cream sm:text-sm">
-              {settings.banner_text}
-            </div>
-          )}
-          <Header />
-          <div className="flex flex-1 flex-col">{children}</div>
-          <Footer />
-        </CartProvider>
+        {children}
       </body>
     </html>
   );
